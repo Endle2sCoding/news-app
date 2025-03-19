@@ -1,0 +1,12 @@
+:root {
+  --header-height: 130px
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  text-decoration: none;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
