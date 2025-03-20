@@ -9,7 +9,7 @@ export const Header = () => {
           src="/news.svg"
           alt="logo"
         />
-        <h1>News</h1>
+        <h1 className={s.title}>News</h1>
       </div>
       <p>{formatDate(new Date())}</p>
     </header>
