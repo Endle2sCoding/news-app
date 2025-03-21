@@ -3,7 +3,8 @@ import s from "./MainPage.module.scss";
 import { Banner } from "@/widgets/Banner";
 import { useEffect, useState } from "react";
 import { getNews, NewsItesmType } from "@/shared/api/apiNews";
-import { NewsList } from "@/widgets/NewsList/NewsList";
+import { NewsList } from "@/widgets/NewsList/ui/NewsList";
+import { AppSkeleton } from "@/shared/ui/AppSkeleton/AppSkeleton";
 const stubNewsItem: NewsItesmType = {
   author: "Malay Mail",
   category: ["general", "regional"],
@@ -21,17 +22,25 @@ const stubNewsItem: NewsItesmType = {
 
 export function MainPage() {
   const [news, setNews] = useState<NewsItesmType[]>([
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
+    // stubNewsItem,
   ]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchNews = async () => {
       try {
+        setIsLoading(true);
         const response: { news: NewsItesmType[] } = await getNews();
         setNews(response.news);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -43,8 +52,15 @@ export function MainPage() {
   return (
     <main className={s.mainPage}>
       <AppContainer>
-        {news.length > 0 ? <Banner item={news[0]} /> : null}
-        <NewsList news={news} />
+        {news.length > 0 && !isLoading ? (
+          <Banner item={news[0]} />
+        ) : (
+          <AppSkeleton
+            count={1}
+            type="banner"
+          />
+        )}
+        {!isLoading ? <NewsList news={news} /> : <AppSkeleton count={10} />}
       </AppContainer>
     </main>
   );
