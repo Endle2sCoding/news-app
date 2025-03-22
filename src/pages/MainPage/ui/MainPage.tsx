@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getNews, NewsItesmType } from "@/shared/api/apiNews";
 import { NewsList } from "@/widgets/NewsList/ui/NewsList";
 import { AppSkeleton } from "@/shared/ui/AppSkeleton/AppSkeleton";
+import { AppPagination } from "@/features/AppPagination";
 const stubNewsItem: NewsItesmType = {
   author: "Malay Mail",
   category: ["general", "regional"],
@@ -22,33 +23,43 @@ const stubNewsItem: NewsItesmType = {
 
 export function MainPage() {
   const [news, setNews] = useState<NewsItesmType[]>([
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
-    // stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
   ]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(7);
+  const pageSize = 10;
+  const fetchNews = async () => {
+    try {
+      setIsLoading(true);
+      const response: { news: NewsItesmType[] } = await getNews(
+        currentPage,
+        pageSize
+      );
+      setNews(response.news);
+      setTotalPages(response.news.length);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setIsLoading(true);
-        const response: { news: NewsItesmType[] } = await getNews();
-        setNews(response.news);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     // fetchNews();
-  }, []);
+  }, [currentPage]);
   console.log(news);
 
+  const handleChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
   return (
     <main className={s.mainPage}>
       <AppContainer>
@@ -60,7 +71,18 @@ export function MainPage() {
             type="banner"
           />
         )}
-        {!isLoading ? <NewsList news={news} /> : <AppSkeleton count={10} />}
+        <AppPagination
+          handleChangePage={handleChangePage}
+          totalPages={totalPages}
+          currentPage={currentPage}
+        />
+        {!isLoading ? (
+          <>
+            <NewsList news={news} />
+          </>
+        ) : (
+          <AppSkeleton count={10} />
+        )}
       </AppContainer>
     </main>
   );
