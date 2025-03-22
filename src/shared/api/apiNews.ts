@@ -14,11 +14,13 @@ export interface NewsItesmType {
   language?: string;
 }
 
-export const getNews = async () => {
+export const getNews = async (page_number = 1, page_size = 10) => {
   try {
-    const response = await axios.get(`${BASE_URL}`, {
+    const response = await axios.get(`${BASE_URL}search`, {
       params: {
-        apiKey: API_KEY
+        apiKey: API_KEY,
+        page_number,
+        page_size
       }
     });
     console.log("getNews res", response);

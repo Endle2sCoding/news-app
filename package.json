@@ -1,5 +1,6 @@
 {
   "name": "news-app",
+  "homepage": "https://endle2scoding.github.io/news-app/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +8,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+       "predeploy": "tsc -b && vite build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@types/node": "^22.13.10",
