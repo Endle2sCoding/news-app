@@ -2,11 +2,18 @@ import { AppContainer } from "@/shared/ui/AppContainer/AppContainer";
 import s from "./MainPage.module.scss";
 import { Banner } from "@/widgets/Banner";
 import { useEffect, useState } from "react";
-import { getNews, NewsItesmType } from "@/shared/api/apiNews";
+import {
+  CategoriesType,
+  ResponseCategoriesType,
+  getCategories,
+  getNews,
+  NewsItemType,
+} from "@/shared/api/apiNews";
 import { NewsList } from "@/widgets/NewsList/ui/NewsList";
 import { AppSkeleton } from "@/shared/ui/AppSkeleton/AppSkeleton";
 import { AppPagination } from "@/features/AppPagination";
-const stubNewsItem: NewsItesmType = {
+import { Categories } from "@/features/Categories";
+const stubNewsItem: NewsItemType = {
   author: "Malay Mail",
   category: ["general", "regional"],
   description:
@@ -22,7 +29,7 @@ const stubNewsItem: NewsItesmType = {
 };
 
 export function MainPage() {
-  const [news, setNews] = useState<NewsItesmType[]>([
+  const [news, setNews] = useState<NewsItemType[]>([
     stubNewsItem,
     stubNewsItem,
     stubNewsItem,
@@ -36,26 +43,91 @@ export function MainPage() {
   ]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(7);
+  const [totalPages, setTotalPages] = useState<number>(10);
   const pageSize = 10;
+
+  const [categories, setCategories] = useState<CategoriesType[]>([
+    "All",
+    "regional",
+    "technology",
+    "lifestyle",
+    "business",
+    "general",
+    "programming",
+    "science",
+    "entertainment",
+    "world",
+    "sports",
+    "finance",
+    "academia",
+    "politics",
+    "health",
+    "opinion",
+    "food",
+    "game",
+    "fashion",
+    "academic",
+    "crap",
+    "travel",
+    "culture",
+    "economy",
+    "environment",
+    "art",
+    "music",
+    "notsure",
+    "CS",
+    "education",
+    "redundant",
+    "television",
+    "commodity",
+    "movie",
+    "entrepreneur",
+    "review",
+    "auto",
+    "energy",
+    "celebrity",
+    "medical",
+    "gadgets",
+    "design",
+    "EE",
+    "security",
+    "mobile",
+    "estate",
+    "funny",
+  ]);
+  const [selectedCategory, setSelectedCategory] =
+    useState<CategoriesType>("All");
+
   const fetchNews = async () => {
     try {
-      setIsLoading(true);
-      const response: { news: NewsItesmType[] } = await getNews(
-        currentPage,
-        pageSize
-      );
+      const response: { news: NewsItemType[] } = await getNews({
+        page_number: currentPage,
+        page_size: pageSize,
+        category: selectedCategory === "All" ? null : selectedCategory,
+      });
       setNews(response.news);
-      setTotalPages(response.news.length);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      setIsLoading(true);
+      const response: { categories: ResponseCategoriesType[] } =
+        await getCategories();
+
+      setCategories(["All", ...response.categories]);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
+    // fetchCategories();
+  }, []);
+  useEffect(() => {
     // fetchNews();
-  }, [currentPage]);
-  console.log(news);
+  }, [currentPage, selectedCategory]);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
@@ -63,6 +135,11 @@ export function MainPage() {
   return (
     <main className={s.mainPage}>
       <AppContainer>
+        <Categories
+          selectedCategory={selectedCategory}
+          categories={categories}
+          setSelectedCategory={setSelectedCategory}
+        />
         {news.length > 0 && !isLoading ? (
           <Banner item={news[0]} />
         ) : (
