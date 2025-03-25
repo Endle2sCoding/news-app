@@ -1,10 +1,10 @@
 // import { formatTimeAgo } from "@/shared/helpers/formatTimeAgo";
 import { AppImgae } from "@/shared/ui/AppImgae/AppImgae";
 import s from "./Banner.module.scss";
-import { NewsItesmType } from "@/shared/api/apiNews";
+import { NewsItemType } from "@/shared/api/apiNews";
 import { formatTimeAgo } from "@/shared/helpers/formatTimeAgo";
 interface BannerProps {
-  item?: NewsItesmType;
+  item?: NewsItemType;
 }
 export const Banner = ({
   item = {

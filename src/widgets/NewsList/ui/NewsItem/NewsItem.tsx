@@ -1,8 +1,8 @@
-import { NewsItesmType } from "@/shared/api/apiNews";
+import { NewsItemType } from "@/shared/api/apiNews";
 import s from "./NewsItem.module.scss";
 import { formatTimeAgo } from "@/shared/helpers/formatTimeAgo";
 interface NewsItemProps {
-  item: NewsItesmType;
+  item: NewsItemType;
 }
 export const NewsItem = ({ item }: NewsItemProps) => {
   return (

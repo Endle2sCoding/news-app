@@ -4,7 +4,11 @@
   --text-not-accented: #6c7072;
 
   --bg-primary: #fff;
-  --bg-secondary: #f2f4f5;--bg-gradient:linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+  --bg-secondary: #f2f4f5;
+  --bg-gradient: linear-gradient(-90deg, #f0f0f0 0%, #f8f8f8 50%, #f0f0f0 100%);
+
+  --primary-lightest: #e7e7ff;
+  --primary-base: #6b4eff;
 }
 
 * {

@@ -1,6 +1,5 @@
 import { AppButton } from "@/shared/ui/AppButton/AppButton";
 import s from "./AppPagination.module.scss";
-import { useMemo } from "react";
 
 export const AppPagination = ({
   totalPages,

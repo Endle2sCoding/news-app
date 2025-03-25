@@ -1,8 +1,8 @@
-import { NewsItesmType } from "@/shared/api/apiNews";
+import { NewsItemType } from "@/shared/api/apiNews";
 import s from "./NewsList.module.scss";
 import { NewsItem } from "./NewsItem/NewsItem";
 interface NewsListProps {
-  news: NewsItesmType[];
+  news: NewsItemType[];
 }
 export const NewsList = ({ news }: NewsListProps) => {
   return (
