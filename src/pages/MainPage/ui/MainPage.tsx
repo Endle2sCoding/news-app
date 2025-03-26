@@ -13,6 +13,8 @@ import { NewsList } from "@/widgets/NewsList/ui/NewsList";
 import { AppSkeleton } from "@/shared/ui/AppSkeleton/AppSkeleton";
 import { AppPagination } from "@/features/AppPagination";
 import { Categories } from "@/features/Categories";
+import { Search } from "@/features/Search";
+import { useDebounce } from "@/shared/helpers/hooks/useDebounce";
 const stubNewsItem: NewsItemType = {
   author: "Malay Mail",
   category: ["general", "regional"],
@@ -97,6 +99,9 @@ export function MainPage() {
   ]);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoriesType>("All");
+  const [keywords, setKeywords] = useState<string>("");
+
+  const debounceKeywords = useDebounce(keywords, 1500);
 
   const fetchNews = async () => {
     try {
@@ -104,6 +109,7 @@ export function MainPage() {
         page_number: currentPage,
         page_size: pageSize,
         category: selectedCategory === "All" ? null : selectedCategory,
+        keywords: debounceKeywords,
       });
       setNews(response.news);
     } catch (error) {
@@ -127,14 +133,18 @@ export function MainPage() {
   }, []);
   useEffect(() => {
     // fetchNews();
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategory, debounceKeywords]);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
   };
   return (
     <main className={s.mainPage}>
-      <AppContainer>
+      <AppContainer className={s.container}>
+        <Search
+          keywords={keywords}
+          setKeywords={setKeywords}
+        />
         <Categories
           selectedCategory={selectedCategory}
           categories={categories}

@@ -20,8 +20,8 @@ export type ResponseCategoriesType = 'regional' | 'technology' | 'lifestyle' | '
 export type CategoriesType = "All" | ResponseCategoriesType;
 
 export const getNews = async (
-  { page_number = 1, page_size = 10, category }:
-    { page_number: number, page_size: number, category: ResponseCategoriesType; }
+  { page_number = 1, page_size = 10, category, keywords }:
+    { page_number: number, page_size: number, category: ResponseCategoriesType | null; keywords: string; }
 ) => {
   try {
     const response = await axios.get(`${BASE_URL}search`, {
@@ -29,7 +29,8 @@ export const getNews = async (
         apiKey: API_KEY,
         page_number,
         page_size,
-        category
+        category,
+        keywords
       }
     });
 
