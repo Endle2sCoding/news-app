@@ -2,13 +2,7 @@ import { AppContainer } from "@/shared/ui/AppContainer/AppContainer";
 import s from "./MainPage.module.scss";
 import { Banner } from "@/widgets/Banner";
 import { useEffect, useState } from "react";
-import {
-  CategoriesType,
-  ResponseCategoriesType,
-  getCategories,
-  getNews,
-  NewsItemType,
-} from "@/shared/api/apiNews";
+import { getCategories, getNews, NewsItemType } from "@/shared/api/apiNews";
 import { NewsList } from "@/widgets/NewsList/ui/NewsList";
 import { AppSkeleton } from "@/shared/ui/AppSkeleton/AppSkeleton";
 import { AppPagination } from "@/features/AppPagination";
@@ -31,6 +25,8 @@ const stubNewsItem: NewsItemType = {
 };
 
 export function MainPage() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [news, setNews] = useState<NewsItemType[]>([
     stubNewsItem,
     stubNewsItem,
@@ -43,13 +39,7 @@ export function MainPage() {
     stubNewsItem,
     stubNewsItem,
   ]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(10);
-  const pageSize = 10;
-
-  const [categories, setCategories] = useState<CategoriesType[]>([
-    "All",
+  const [categories, setCategories] = useState<string[]>([
     "regional",
     "technology",
     "lifestyle",
@@ -97,18 +87,29 @@ export function MainPage() {
     "estate",
     "funny",
   ]);
-  const [selectedCategory, setSelectedCategory] =
-    useState<CategoriesType>("All");
-  const [keywords, setKeywords] = useState<string>("");
 
-  const debounceKeywords = useDebounce(keywords, 1500);
+  const [filters, setFilters] = useState<{
+    page_number: number;
+    page_size: number;
+    category: string;
+    keywords: string;
+  }>({
+    page_number: 1,
+    page_size: 10,
+    category: "All",
+    keywords: "",
+  });
+  const changFilters = (key: string, value: string | number | null) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const debounceKeywords = useDebounce(filters.keywords, 1500);
+  const [totalPages, setTotalPages] = useState<number>(10);
 
   const fetchNews = async () => {
     try {
       const response: { news: NewsItemType[] } = await getNews({
-        page_number: currentPage,
-        page_size: pageSize,
-        category: selectedCategory === "All" ? null : selectedCategory,
+        ...filters,
         keywords: debounceKeywords,
       });
       setNews(response.news);
@@ -119,10 +120,9 @@ export function MainPage() {
   const fetchCategories = async () => {
     try {
       setIsLoading(true);
-      const response: { categories: ResponseCategoriesType[] } =
-        await getCategories();
+      const response: { categories: string[] } = await getCategories();
 
-      setCategories(["All", ...response.categories]);
+      setCategories([...response.categories]);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -133,22 +133,24 @@ export function MainPage() {
   }, []);
   useEffect(() => {
     // fetchNews();
-  }, [currentPage, selectedCategory, debounceKeywords]);
+  }, [filters.page_number, filters.category, debounceKeywords]);
 
   const handleChangePage = (page: number) => {
-    setCurrentPage(page);
+    changFilters("page_number", page);
   };
   return (
     <main className={s.mainPage}>
       <AppContainer className={s.container}>
         <Search
-          keywords={keywords}
-          setKeywords={setKeywords}
+          keywords={filters.keywords}
+          setKeywords={(keywords: string) => changFilters("keywords", keywords)}
         />
         <Categories
-          selectedCategory={selectedCategory}
+          selectedCategory={filters.category}
           categories={categories}
-          setSelectedCategory={setSelectedCategory}
+          setSelectedCategory={(category: string | null) =>
+            changFilters("category", category)
+          }
         />
         {news.length > 0 && !isLoading ? (
           <Banner item={news[0]} />
@@ -161,7 +163,7 @@ export function MainPage() {
         <AppPagination
           handleChangePage={handleChangePage}
           totalPages={totalPages}
-          currentPage={currentPage}
+          currentPage={filters.page_number}
         />
         {!isLoading ? (
           <>
