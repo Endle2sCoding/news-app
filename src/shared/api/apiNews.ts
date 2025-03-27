@@ -14,14 +14,13 @@ export interface NewsItemType {
   image?: string;
   language?: string;
 }
-export type ResponseCategoriesType = 'regional' | 'technology' | 'lifestyle' | 'business' | 'general' | 'programming' | 'science' | 'entertainment' | 'world' | 'sports' | 'finance' | 'academia' | 'politics' | 'health' | 'opinion' | 'food' | 'game' | 'fashion' | 'academic' | 'crap' | 'travel' | 'culture' | 'economy' | 'environment' | 'art' | 'music' | 'notsure' | 'CS' | 'education' | 'redundant' | 'television' | 'commodity' | 'movie' | 'entrepreneur' | 'review' | 'auto' | 'energy' | 'celebrity' | 'medical' | 'gadgets' | 'design' | 'EE' | 'security' | 'mobile' | 'estate' |
-  'funny';
+export type ResponseCategoriesType = string[];
 
-export type CategoriesType = "All" | ResponseCategoriesType;
+
 
 export const getNews = async (
   { page_number = 1, page_size = 10, category, keywords }:
-    { page_number: number, page_size: number, category: ResponseCategoriesType | null; keywords: string; }
+    { page_number: number, page_size: number, category: string | null; keywords: string; }
 ) => {
   try {
     const response = await axios.get(`${BASE_URL}search`, {
