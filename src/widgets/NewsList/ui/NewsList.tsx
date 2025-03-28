@@ -1,10 +1,15 @@
 import { NewsItemType } from "@/shared/api/apiNews";
 import s from "./NewsList.module.scss";
 import { NewsItem } from "./NewsItem/NewsItem";
+
 interface NewsListProps {
   news: NewsItemType[];
+  isLoading: boolean;
 }
-export const NewsList = ({ news }: NewsListProps) => {
+export const NewsList = ({ news, isLoading }: NewsListProps) => {
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className={s.newsList}>
       {news &&

@@ -1,7 +1,15 @@
-.list {
+.list.direction_column {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+
+.list.direction_banner {
+  display: grid;
+  width: 100%;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 
@@ -12,7 +20,7 @@
 
 .banner {
   width: 100%;
-  padding-top:  70%;
+  padding-top: 70%;
   position: relative;
 }
 

@@ -1,14 +1,10 @@
 import { AppContainer } from "@/shared/ui/AppContainer/AppContainer";
 import s from "./MainPage.module.scss";
-import { Banner } from "@/widgets/Banner";
 import { useEffect, useState } from "react";
-import { getCategories, getNews, NewsItemType } from "@/shared/api/apiNews";
-import { NewsList } from "@/widgets/NewsList/ui/NewsList";
-import { AppSkeleton } from "@/shared/ui/AppSkeleton/AppSkeleton";
-import { AppPagination } from "@/features/AppPagination";
-import { Categories } from "@/features/Categories";
-import { Search } from "@/features/Search";
+import { getNews, NewsItemType } from "@/shared/api/apiNews";
 import { useDebounce } from "@/shared/helpers/hooks/useDebounce";
+import { LatestNews } from "@/widgets/LatestNews";
+import { NewsByFilters } from "@/widgets/NewsByFilters";
 const stubNewsItem: NewsItemType = {
   author: "Malay Mail",
   category: ["general", "regional"],
@@ -39,64 +35,16 @@ export function MainPage() {
     stubNewsItem,
     stubNewsItem,
   ]);
-  const [categories, setCategories] = useState<string[]>([
-    "regional",
-    "technology",
-    "lifestyle",
-    "business",
-    "general",
-    "programming",
-    "science",
-    "entertainment",
-    "world",
-    "sports",
-    "finance",
-    "academia",
-    "politics",
-    "health",
-    "opinion",
-    "food",
-    "game",
-    "fashion",
-    "academic",
-    "crap",
-    "travel",
-    "culture",
-    "economy",
-    "environment",
-    "art",
-    "music",
-    "notsure",
-    "CS",
-    "education",
-    "redundant",
-    "television",
-    "commodity",
-    "movie",
-    "entrepreneur",
-    "review",
-    "auto",
-    "energy",
-    "celebrity",
-    "medical",
-    "gadgets",
-    "design",
-    "EE",
-    "security",
-    "mobile",
-    "estate",
-    "funny",
-  ]);
 
   const [filters, setFilters] = useState<{
     page_number: number;
     page_size: number;
-    category: string;
+    category: string | null;
     keywords: string;
   }>({
     page_number: 1,
     page_size: 10,
-    category: "All",
+    category: null,
     keywords: "",
   });
   const changFilters = (key: string, value: string | number | null) => {
@@ -107,6 +55,7 @@ export function MainPage() {
   const [totalPages, setTotalPages] = useState<number>(10);
 
   const fetchNews = async () => {
+    setIsLoading(true);
     try {
       const response: { news: NewsItemType[] } = await getNews({
         ...filters,
@@ -115,63 +64,29 @@ export function MainPage() {
       setNews(response.news);
     } catch (error) {
       console.log(error);
-    }
-  };
-  const fetchCategories = async () => {
-    try {
-      setIsLoading(true);
-      const response: { categories: string[] } = await getCategories();
-
-      setCategories([...response.categories]);
+    } finally {
       setIsLoading(false);
-    } catch (error) {
-      console.log(error);
     }
   };
-  useEffect(() => {
-    // fetchCategories();
-  }, []);
+
   useEffect(() => {
     // fetchNews();
   }, [filters.page_number, filters.category, debounceKeywords]);
 
-  const handleChangePage = (page: number) => {
-    changFilters("page_number", page);
-  };
   return (
     <main className={s.mainPage}>
       <AppContainer className={s.container}>
-        <Search
-          keywords={filters.keywords}
-          setKeywords={(keywords: string) => changFilters("keywords", keywords)}
+        <LatestNews
+          isLoading={isLoading}
+          banners={news}
         />
-        <Categories
-          selectedCategory={filters.category}
-          categories={categories}
-          setSelectedCategory={(category: string | null) =>
-            changFilters("category", category)
-          }
-        />
-        {news.length > 0 && !isLoading ? (
-          <Banner item={news[0]} />
-        ) : (
-          <AppSkeleton
-            count={1}
-            type="banner"
-          />
-        )}
-        <AppPagination
-          handleChangePage={handleChangePage}
+        <NewsByFilters
+          filters={filters}
+          changFilters={changFilters}
           totalPages={totalPages}
-          currentPage={filters.page_number}
+          isLoading={isLoading}
+          news={news}
         />
-        {!isLoading ? (
-          <>
-            <NewsList news={news} />
-          </>
-        ) : (
-          <AppSkeleton count={10} />
-        )}
       </AppContainer>
     </main>
   );
