@@ -1,20 +1,81 @@
+import { useEffect, useState } from "react";
 import s from "./Categories.module.scss";
 import { AppButton } from "@/shared/ui/AppButton/AppButton";
+import { getCategories } from "@/shared/api/apiNews";
 interface CategoriesProps {
   categories?: string[];
-  selectedCategory: string;
+  selectedCategory: string | null;
   setSelectedCategory: (category: string | null) => void;
 }
 export const Categories = ({
-  categories,
   selectedCategory,
   setSelectedCategory,
 }: CategoriesProps) => {
+  const [categories, setCategories] = useState<string[]>([
+    "regional",
+    "technology",
+    "lifestyle",
+    "business",
+    "general",
+    "programming",
+    "science",
+    "entertainment",
+    "world",
+    "sports",
+    "finance",
+    "academia",
+    "politics",
+    "health",
+    "opinion",
+    "food",
+    "game",
+    "fashion",
+    "academic",
+    "crap",
+    "travel",
+    "culture",
+    "economy",
+    "environment",
+    "art",
+    "music",
+    "notsure",
+    "CS",
+    "education",
+    "redundant",
+    "television",
+    "commodity",
+    "movie",
+    "entrepreneur",
+    "review",
+    "auto",
+    "energy",
+    "celebrity",
+    "medical",
+    "gadgets",
+    "design",
+    "EE",
+    "security",
+    "mobile",
+    "estate",
+    "funny",
+  ]);
+  const fetchCategories = async () => {
+    try {
+      const response: { categories: string[] } = await getCategories();
+
+      setCategories([...response.categories]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    // fetchCategories();
+  }, []);
   return (
     <div className={s.categories}>
       <AppButton
         onClick={() => setSelectedCategory(null)}
-        className={selectedCategory === "All" ? s.active : s.item}
+        className={selectedCategory === null ? s.active : s.item}
       >
         {"All"}
       </AppButton>
