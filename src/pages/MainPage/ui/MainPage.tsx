@@ -1,11 +1,10 @@
 import { AppContainer } from "@/shared/ui/AppContainer/AppContainer";
 import s from "./MainPage.module.scss";
-import { useEffect, useState } from "react";
-import { getNews, NewsItemType } from "@/shared/api/apiNews";
-import { useDebounce } from "@/shared/helpers/hooks/useDebounce";
-import { LatestNews } from "@/widgets/LatestNews";
-import { NewsByFilters } from "@/widgets/NewsByFilters";
-const stubNewsItem: NewsItemType = {
+import { NewsItemType } from "@/shared/api/apiNews";
+
+import { LatestNews } from "@/layoutSections/LatestNews";
+import { NewsByFilters } from "@/layoutSections/NewsByFilters";
+export const stubNewsItem: NewsItemType = {
   author: "Malay Mail",
   category: ["general", "regional"],
   description:
@@ -21,72 +20,11 @@ const stubNewsItem: NewsItemType = {
 };
 
 export function MainPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const [news, setNews] = useState<NewsItemType[]>([
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-    stubNewsItem,
-  ]);
-
-  const [filters, setFilters] = useState<{
-    page_number: number;
-    page_size: number;
-    category: string | null;
-    keywords: string;
-  }>({
-    page_number: 1,
-    page_size: 10,
-    category: null,
-    keywords: "",
-  });
-  const changFilters = (key: string, value: string | number | null) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const debounceKeywords = useDebounce(filters.keywords, 1500);
-  const [totalPages, setTotalPages] = useState<number>(10);
-
-  const fetchNews = async () => {
-    setIsLoading(true);
-    try {
-      const response: { news: NewsItemType[] } = await getNews({
-        ...filters,
-        keywords: debounceKeywords,
-      });
-      setNews(response.news);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    // fetchNews();
-  }, [filters.page_number, filters.category, debounceKeywords]);
-
   return (
     <main className={s.mainPage}>
       <AppContainer className={s.container}>
-        <LatestNews
-          isLoading={isLoading}
-          banners={news}
-        />
-        <NewsByFilters
-          filters={filters}
-          changFilters={changFilters}
-          totalPages={totalPages}
-          isLoading={isLoading}
-          news={news}
-        />
+        <LatestNews />
+        <NewsByFilters />
       </AppContainer>
     </main>
   );
