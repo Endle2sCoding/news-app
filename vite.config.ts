@@ -14,5 +14,5 @@ export default defineConfig({
   server: {
     port: 3200
   },
-  // base: "/news-app"
+  base: "/news-app"
 });

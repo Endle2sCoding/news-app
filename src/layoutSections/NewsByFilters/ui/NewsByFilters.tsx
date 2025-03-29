@@ -3,30 +3,68 @@ import s from "./NewsByFilters.module.scss";
 import { AppPagination } from "@/features/AppPagination";
 import { Categories } from "@/features/Categories";
 import { Search } from "@/features/Search";
-import { NewsItemType } from "@/shared/api/apiNews";
+import { stubNewsItem } from "@/pages/MainPage/ui/MainPage";
+import { getNews, NewsItemType } from "@/shared/api/apiNews";
+import { useDebounce } from "@/shared/helpers/hooks/useDebounce";
 import { NewsBanner } from "@/widgets/NewsBanner";
 import { NewsList } from "@/widgets/NewsList/ui/NewsList";
+import { useEffect, useState } from "react";
 interface NewsByFiltersProps {
-  filters: {
+  className?: string;
+}
+export const NewsByFilters = ({ className }: NewsByFiltersProps) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [news, setNews] = useState<NewsItemType[]>([
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+  ]);
+
+  const [filters, setFilters] = useState<{
     page_number: number;
     page_size: number;
     category: string | null;
     keywords: string;
+  }>({
+    page_number: 1,
+    page_size: 10,
+    category: null,
+    keywords: "",
+  });
+  const changFilters = (key: string, value: string | number | null) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
-  changFilters: (key: string, value: string | number | null) => void;
-  totalPages: number;
-  isLoading: boolean;
-  news: NewsItemType[];
-  className?: string;
-}
-export const NewsByFilters = ({
-  filters,
-  changFilters,
-  totalPages,
-  isLoading,
-  news,
-  className,
-}: NewsByFiltersProps) => {
+
+  const debounceKeywords = useDebounce(filters.keywords, 1500);
+  const [totalPages, setTotalPages] = useState<number>(10);
+
+  const fetchNews = async () => {
+    setIsLoading(true);
+    try {
+      const response: { news: NewsItemType[] } = await getNews({
+        ...filters,
+        keywords: debounceKeywords,
+      });
+      setNews(response.news);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // fetchNews();
+  }, [filters.page_number, filters.category, debounceKeywords]);
+
   const handleChangePage = (page: number) => {
     changFilters("page_number", page);
   };
