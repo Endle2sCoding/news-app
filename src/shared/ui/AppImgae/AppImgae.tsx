@@ -3,7 +3,7 @@ interface AppImgaeProps {
   src?: string;
   alt?: string;
 }
-export const AppImgae = ({ src, alt }: AppImgaeProps) => {
+export const AppImgae = ({ src, alt = "image" }: AppImgaeProps) => {
   return (
     <div className={s.appImageWrapper}>
       {src ? (

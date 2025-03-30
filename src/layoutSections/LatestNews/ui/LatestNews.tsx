@@ -1,8 +1,8 @@
-import { BannersList } from "@/layoutSections/LatestNews/ui/BannersList";
 import s from "./LatestNews.module.scss";
 import { getLatestNews, NewsItemType } from "@/shared/api/apiNews";
 import { useEffect, useState } from "react";
 import { stubNewsItem } from "@/pages/MainPage/ui/MainPage";
+import { BannersList } from "./BannersList/BannersList";
 interface LatestNewsProps {
   className?: string;
 }

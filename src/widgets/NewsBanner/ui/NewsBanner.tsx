@@ -13,6 +13,11 @@ export const NewsBanner = ({
     title: "news",
     published: "2025-03-20 12:17:10 +0000",
     author: "author",
+    url: "",
+    category: [],
+    description: "",
+    image: "",
+    language: "",
   },
   isLoading,
 }: BannerProps) => {
