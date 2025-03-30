@@ -3,6 +3,11 @@
   width: 100%;
   gap: 12px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  max-height: 1630px;
-  overflow-y: auto;
+}
+
+@media(min-width:768px) {
+  .bannersList {
+    max-height: 1630px;
+    overflow-y: auto;
+  }
 }

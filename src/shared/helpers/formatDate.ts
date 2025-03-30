@@ -1,5 +1,5 @@
 export function formatDate(date: Date) {
-  const options: Record<string, string> = {
+  const options: Intl.DateTimeFormatOptions = {
     weekday: "long",
     year: "numeric",
     month: "long",
