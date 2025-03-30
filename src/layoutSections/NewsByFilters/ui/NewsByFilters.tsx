@@ -1,14 +1,16 @@
-import s from "./NewsByFilters.module.scss";
-
 import { AppPagination } from "@/features/AppPagination";
 import { Categories } from "@/features/Categories";
 import { Search } from "@/features/Search";
+import { Slider } from "@/features/Slider";
 import { stubNewsItem } from "@/pages/MainPage/ui/MainPage";
 import { getNews, NewsItemType } from "@/shared/api/apiNews";
 import { useDebounce } from "@/shared/helpers/hooks/useDebounce";
 import { NewsBanner } from "@/widgets/NewsBanner";
 import { NewsList } from "@/widgets/NewsList/ui/NewsList";
 import { useEffect, useState } from "react";
+
+import s from "./NewsByFilters.module.scss";
+
 interface NewsByFiltersProps {
   className?: string;
 }
@@ -74,12 +76,14 @@ export const NewsByFilters = ({ className }: NewsByFiltersProps) => {
         keywords={filters.keywords}
         setKeywords={(keywords: string) => changFilters("keywords", keywords)}
       />
-      <Categories
-        selectedCategory={filters.category}
-        setSelectedCategory={(category: string | null) =>
-          changFilters("category", category)
-        }
-      />
+      {/* <Slider> */}
+        <Categories
+          selectedCategory={filters.category}
+          setSelectedCategory={(category: string | null) =>
+            changFilters("category", category)
+          }
+        />
+      {/* </Slider> */}
       <NewsBanner
         isLoading={isLoading}
         item={news.length > 0 && news[0] ? news[0] : news[0]}
@@ -94,16 +98,7 @@ export const NewsByFilters = ({ className }: NewsByFiltersProps) => {
         isLoading={isLoading}
         news={news}
       />
-      {/* {!isLoading ? (
-        <>
-          <NewsList news={news} />
-        </>
-      ) : (
-        <AppSkeleton
-          count={10}
-          direction="column"
-        />
-      )} */}
+
     </section>
   );
 };
