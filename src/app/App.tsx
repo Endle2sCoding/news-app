@@ -1,11 +1,8 @@
-import { MainPage } from "@/pages/MainPage";
-import { Header } from "@/widgets/Header";
 
 function App() {
   return (
     <div>
-      <Header />
-      <MainPage />
+ <h1>App</h1>
     </div>
   );
 }
