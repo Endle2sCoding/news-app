@@ -1,0 +1,26 @@
+.banner.appImageWrapper {
+  width: 100%;
+  height: auto;
+  padding-top: 80%;
+  position: relative;
+  background-color: var(--bg-secondary);
+}
+
+.banner .appImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logo.appImageWrapper {
+  width: 30px;
+  height: 30px;
+}
+
+.logo .appImage {
+  width: 100%;
+  height: 100%;
+}

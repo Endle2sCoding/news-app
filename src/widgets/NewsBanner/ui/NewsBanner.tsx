@@ -1,39 +1,27 @@
-// import { formatTimeAgo } from "@/shared/helpers/formatTimeAgo";
-import { AppImgae } from "@/shared/ui/AppImgae/AppImgae";
+import { NewsItemType } from "@/pages/MainPage/ui/MainPage";
 import s from "./NewsBanner.module.scss";
-import { NewsItemType } from "@/shared/api/apiNews";
-import { formatTimeAgo } from "@/shared/helpers/formatTimeAgo";
-interface BannerProps {
-  item?: NewsItemType;
-  isLoading: boolean;
+import { Text } from "@/shared/ui/Text/Text";
+import { formatTimeAgo } from "@/shared/hooks/formatTimeAgo";
+import { AppImage } from "@/shared/ui/AppImage/AppImage";
+
+interface NewsBannerProps {
+  item: NewsItemType;
+  className?: string;
 }
-export const NewsBanner = ({
-  item = {
-    id: "1",
-    title: "news",
-    published: "2025-03-20 12:17:10 +0000",
-    author: "author",
-    url: "",
-    category: [],
-    description: "",
-    image: "",
-    language: "",
-  },
-  isLoading,
-}: BannerProps) => {
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+export const NewsBanner = ({ item, className }: NewsBannerProps) => {
   return (
-    <div className={s.banner}>
-      <AppImgae
-        alt={item.title}
+    <div className={`${s.newsBanner} ${className ? className : ""}`}>
+      <AppImage
         src={item.image}
+        alt={"banner"}
       />
-      <h3 className={s.title}>{item.title}</h3>
-      <p className={s.extra}>
-        {formatTimeAgo(item.published) || "3 days ago"} by {item.author}
-      </p>
+      <Text TagName="h3">{item.title}</Text>
+      <Text
+        colorType="not-accented"
+        size="s"
+      >
+        {formatTimeAgo(item.published)} by {item.author}
+      </Text>
     </div>
   );
 };

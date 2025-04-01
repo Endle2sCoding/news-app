@@ -1,5 +1,8 @@
 :root {
-  --header-height: 130px;
+  /* Sizes */
+  --header-height: 80px;
+
+  /* Colors */
   --text-primary: #000;
   --text-not-accented: #6c7072;
 
@@ -9,6 +12,8 @@
 
   --primary-lightest: #e7e7ff;
   --primary-base: #6b4eff;
+
+  --border-color: #f2f4f5;
 }
 
 * {
@@ -19,4 +24,5 @@
   box-sizing: border-box;
   font-family: sans-serif;
   color: var(--text-primary);
+  font-size: 16px;
 }

@@ -1,22 +1,17 @@
 import { MainPage } from "@/pages/MainPage";
-import { Header } from "@/layoutSections/Header";
-import { Route, Routes } from "react-router-dom";
-import { NotFoundPage } from "@/pages/NotFoundPage";
+import { Header } from "@/sections/Header";
+import { Container } from "@/shared/ui/Container/Container";
+import { Suspense } from "react";
 
 function App() {
   return (
     <div>
       <Header />
-      <Routes>
-        <Route
-          path="/"
-          element={<MainPage />}
-        />
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
-      </Routes>
+      <Container>
+        <Suspense fallback={<div>Loading...</div>}>
+          <MainPage />
+        </Suspense>
+      </Container>
     </div>
   );
 }

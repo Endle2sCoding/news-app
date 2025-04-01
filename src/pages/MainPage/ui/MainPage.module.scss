@@ -1,13 +1,6 @@
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.mainPage {
   width: 100%;
+  display: flex;
+  flex-direction: column;
   gap: 32px;
-
-  @media (max-width:768px) {
-    grid-template-columns: 1fr
-  }
 }
-
-
-

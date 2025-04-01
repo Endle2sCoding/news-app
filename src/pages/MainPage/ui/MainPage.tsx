@@ -1,10 +1,22 @@
-import { AppContainer } from "@/shared/ui/AppContainer/AppContainer";
+import { Text } from "@/shared/ui/Text/Text";
 import s from "./MainPage.module.scss";
-import { NewsItemType } from "@/shared/api/apiNews";
+import { NewsBanner } from "@/widgets/NewsBanner/ui/NewsBanner";
+interface MainPageProps {
+  className?: string;
+}
 
-import { LatestNews } from "@/layoutSections/LatestNews";
-import { NewsByFilters } from "@/layoutSections/NewsByFilters";
-export const stubNewsItem: NewsItemType = {
+export interface NewsItemType {
+  id: string;
+  title: string;
+  url: string;
+  published: string;
+  author: string;
+  category: string[];
+  description: string;
+  image: string;
+  language: string;
+}
+const stubNewsItem: NewsItemType = {
   author: "Malay Mail",
   category: ["general", "regional"],
   description:
@@ -19,13 +31,11 @@ export const stubNewsItem: NewsItemType = {
   url: "https://www.malaymail.com/news/sports/2025/03/20/malaysia-cup-final-between-jdt-and-sri-pahang-changed-to-april-26-allowing-fans-to-plan-trip-amid-raya-celebrations/170267",
 };
 
-export function MainPage() {
+const MainPage = ({ className }: MainPageProps) => {
   return (
-    <main className={s.mainPage}>
-      <AppContainer className={s.container}>
-        <LatestNews />
-        <NewsByFilters />
-      </AppContainer>
+    <main className={`${s.mainPage} ${className ? className : ""}`}>
+      <NewsBanner item={stubNewsItem} />
     </main>
   );
-}
+};
+export default MainPage;
