@@ -1,6 +1,8 @@
 import { Text } from "@/shared/ui/Text/Text";
 import s from "./MainPage.module.scss";
 import { NewsBanner } from "@/widgets/NewsBanner/ui/NewsBanner";
+import { useEffect, useState } from "react";
+import { getNews } from "@/shared/api/apiNews";
 interface MainPageProps {
   className?: string;
 }
@@ -32,6 +34,19 @@ const stubNewsItem: NewsItemType = {
 };
 
 const MainPage = ({ className }: MainPageProps) => {
+  const [news, setNews] = useState<NewsItemType[]>([]);
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await getNews();
+        // setNews(response);
+        // console.log("response", response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchNews();
+  }, []);
   return (
     <main className={`${s.mainPage} ${className ? className : ""}`}>
       <NewsBanner item={stubNewsItem} />
