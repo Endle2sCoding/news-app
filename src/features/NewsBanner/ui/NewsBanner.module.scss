@@ -1,0 +1,23 @@
+.newsBanner {
+  width: 100%;
+  display: flex;
+  gap: 12px;
+}
+
+.banner {
+  flex-direction: column;
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.item {
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

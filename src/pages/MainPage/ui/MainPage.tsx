@@ -1,22 +1,11 @@
 import { Text } from "@/shared/ui/Text/Text";
 import s from "./MainPage.module.scss";
-import { NewsBanner } from "@/widgets/NewsBanner/ui/NewsBanner";
+import { NewsBanner } from "@/features/NewsBanner/ui/NewsBanner";
 import { useEffect, useState } from "react";
-import { getNews } from "@/shared/api/apiNews";
+import { getNews, NewsItemType } from "@/shared/api/apiNews";
+import { NewsList } from "@/widgets/NewsList";
 interface MainPageProps {
   className?: string;
-}
-
-export interface NewsItemType {
-  id: string;
-  title: string;
-  url: string;
-  published: string;
-  author: string;
-  category: string[];
-  description: string;
-  image: string;
-  language: string;
 }
 const stubNewsItem: NewsItemType = {
   author: "Malay Mail",
@@ -34,22 +23,30 @@ const stubNewsItem: NewsItemType = {
 };
 
 const MainPage = ({ className }: MainPageProps) => {
-  const [news, setNews] = useState<NewsItemType[]>([]);
+  const [news, setNews] = useState<NewsItemType[]>([
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+    stubNewsItem,
+  ]);
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const response = await getNews();
-        // setNews(response);
-        // console.log("response", response);
+        setNews(response.news);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchNews();
+    // fetchNews();
   }, []);
   return (
     <main className={`${s.mainPage} ${className ? className : ""}`}>
-      <NewsBanner item={stubNewsItem} />
+      {news.length > 0 ? <NewsBanner newsItem={news[0]} /> : null}
+      <NewsList newsList={news} />
     </main>
   );
 };

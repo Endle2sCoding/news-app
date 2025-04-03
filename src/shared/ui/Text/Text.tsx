@@ -2,8 +2,8 @@ import { ReactNode } from "react";
 import s from "./Text.module.scss";
 interface TextProps {
   children: ReactNode;
-  TagName?: "p" | "h1" | "h3";
-  size?: "s" | "m";
+  TagName?: "p" | "h1" | "h3" | "h4";
+  size?: "xs" | "s" | "m";
   colorType?: "primary" | "not-accented";
   className?: string;
 }
@@ -16,7 +16,9 @@ export const Text = ({
 }: TextProps) => {
   return (
     <TagName
-      className={`${s.text} ${s[colorType]} ${s[`size_${size}`]} ${className ? className : ""}`}
+      className={`${s.text} ${s[colorType]} ${s[`size_${size}`]} ${
+        className ? className : ""
+      }`}
     >
       {children}
     </TagName>

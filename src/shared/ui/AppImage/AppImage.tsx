@@ -2,7 +2,7 @@ import s from "./AppImage.module.scss";
 interface ImageProps {
   src: string;
   alt: string;
-  size?: "logo" | "banner";
+  size?: "logo" | "banner" | "item";
   className?: string;
 }
 export const AppImage = ({
@@ -18,12 +18,12 @@ export const AppImage = ({
       }`}
     >
       {src ? (
-      <img
-        className={s.appImage}
-        src={src}
-        alt={alt}
-      />
-       ) : null} 
+        <img
+          className={s.appImage}
+          src={src}
+          alt={alt}
+        />
+      ) : null}
     </div>
   );
 };

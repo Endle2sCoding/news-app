@@ -1,26 +1,44 @@
-.banner.appImageWrapper {
-  width: 100%;
-  height: auto;
-  padding-top: 80%;
-  position: relative;
-  background-color: var(--bg-secondary);
+.banner {
+  &.appImageWrapper {
+    width: 100%;
+    height: auto;
+    padding-top: 80%;
+    position: relative;
+    background-color: var(--bg-secondary);
+  }
+
+  .appImage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
-.banner .appImage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.logo {
+  &.appImageWrapper {
+    width: 30px;
+    height: 30px;
+  }
+
+  .appImage {
+    width: 100%;
+    height: 100%;
+  }
 }
 
-.logo.appImageWrapper {
-  width: 30px;
-  height: 30px;
-}
+.item {
+  &.appImageWrapper {
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+  }
 
-.logo .appImage {
-  width: 100%;
-  height: 100%;
+  .appImage {
+    width: 100%;
+    height: 100%;
+  }
 }
