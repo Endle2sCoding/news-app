@@ -1,9 +1,9 @@
-import { Text } from "@/shared/ui/Text/Text";
 import s from "./MainPage.module.scss";
 import { NewsBanner } from "@/features/NewsBanner/ui/NewsBanner";
 import { useEffect, useState } from "react";
 import { getNews, NewsItemType } from "@/shared/api/apiNews";
 import { NewsList } from "@/widgets/NewsList";
+import { Skeleton } from "@/shared/ui/Skeleton/Skeleton";
 interface MainPageProps {
   className?: string;
 }
@@ -32,11 +32,14 @@ const MainPage = ({ className }: MainPageProps) => {
     stubNewsItem,
     stubNewsItem,
   ]);
+  const [isLoading, setisLoading] = useState<boolean>(true);
   useEffect(() => {
     const fetchNews = async () => {
+      setisLoading(true);
       try {
         const response = await getNews();
         setNews(response.news);
+        setisLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -45,8 +48,19 @@ const MainPage = ({ className }: MainPageProps) => {
   }, []);
   return (
     <main className={`${s.mainPage} ${className ? className : ""}`}>
-      {news.length > 0 ? <NewsBanner newsItem={news[0]} /> : null}
-      <NewsList newsList={news} />
+      {news.length > 0 && !isLoading ? (
+        <NewsBanner newsItem={news[0]} />
+      ) : (
+        <Skeleton />
+      )}
+      {!isLoading ? (
+        <NewsList newsList={news} />
+      ) : (
+        <Skeleton
+          count={10}
+          type="item"
+        />
+      )}
     </main>
   );
 };

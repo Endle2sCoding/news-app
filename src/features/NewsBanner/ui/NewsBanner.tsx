@@ -21,7 +21,7 @@ export const NewsBanner = ({
     >
       <AppImage
         src={newsItem.image}
-        alt={"banner"}
+        alt={"image"}
         size={type}
       />
       <div className={s.info}>
