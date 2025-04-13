@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getNews, NewsItemType } from "@/shared/api/apiNews";
 import { NewsList } from "@/widgets/NewsList";
 import { Skeleton } from "@/shared/ui/Skeleton/Skeleton";
+import { Pagination } from "@/features/Pagination";
 interface MainPageProps {
   className?: string;
 }
@@ -32,20 +33,30 @@ const MainPage = ({ className }: MainPageProps) => {
     stubNewsItem,
     stubNewsItem,
   ]);
-  const [isLoading, setisLoading] = useState<boolean>(true);
+  const [isLoading, setisLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  const fetchNews = async (currentPage: number) => {
+    setisLoading(true);
+    try {
+      const response = await getNews({ page_number: currentPage });
+      setNews(response.news);
+      setTotalPages(response.news.length > 10 ? 10 : response.news.length);
+      setisLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchNews = async () => {
-      setisLoading(true);
-      try {
-        const response = await getNews();
-        setNews(response.news);
-        setisLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    // fetchNews();
-  }, []);
+    // fetchNews(currentPage);
+  }, [currentPage]);
+
+  const handleChangePage = (page: number) => {
+    setCurrentPage(page);
+  };
   return (
     <main className={`${s.mainPage} ${className ? className : ""}`}>
       {news.length > 0 && !isLoading ? (
@@ -53,6 +64,11 @@ const MainPage = ({ className }: MainPageProps) => {
       ) : (
         <Skeleton />
       )}
+      <Pagination
+        totalPages={totalPages}
+        currentPage={currentPage}
+        handleChangePage={handleChangePage}
+      />
       {!isLoading ? (
         <NewsList newsList={news} />
       ) : (

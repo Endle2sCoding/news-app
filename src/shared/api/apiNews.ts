@@ -26,17 +26,33 @@ interface NewsApiResponse {
 //   status: string;
 // }
 
-// interface ParamsType {
-//   page_number: number,
-//   page_size: number,
-//   category: string | null;
-//   keywords: string;
-// }
+interface ParamsType {
+  page_number?: number,
+  page_size?: number,
+  category?: string | null;
+  keywords?: string;
+}
 
 
 
 
-export const getNews = async (): Promise<NewsApiResponse> => {
+export const getNews = async ({ page_number = 1, page_size = 10 }: ParamsType): Promise<NewsApiResponse> => {
+  try {
+    const res = await axios.get<NewsApiResponse>(`${BASE_URL}search`, {
+      params: {
+        apiKey: API_KEY,
+        page_number,
+        page_size
+      }
+    });
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return { news: [], page: 1, status: "error" };
+  }
+};
+
+export const getNewsLatest = async (): Promise<NewsApiResponse> => {
   try {
     const res = await axios.get<NewsApiResponse>(`${BASE_URL}latest-news`, {
       params: {

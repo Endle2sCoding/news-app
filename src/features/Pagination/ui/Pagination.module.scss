@@ -1,0 +1,21 @@
+.pagination {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.list {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.disable {
+  opacity: .4;
+  cursor: auto;
+}
