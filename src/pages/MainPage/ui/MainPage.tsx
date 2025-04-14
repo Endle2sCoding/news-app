@@ -1,10 +1,11 @@
 import s from "./MainPage.module.scss";
 import { NewsBanner } from "@/features/NewsBanner/ui/NewsBanner";
 import { useEffect, useState } from "react";
-import { getNews, NewsItemType } from "@/shared/api/apiNews";
+import { getCategories, getNews, NewsItemType } from "@/shared/api/apiNews";
 import { NewsList } from "@/widgets/NewsList";
 import { Skeleton } from "@/shared/ui/Skeleton/Skeleton";
 import { Pagination } from "@/features/Pagination";
+import { Categories } from "@/features/Categories";
 interface MainPageProps {
   className?: string;
 }
@@ -37,11 +38,17 @@ const MainPage = ({ className }: MainPageProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(10);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   const fetchNews = async (currentPage: number) => {
     setisLoading(true);
     try {
-      const response = await getNews({ page_number: currentPage });
+      const response = await getNews({
+        page_number: currentPage,
+        page_size: pageSize,
+        category: selectedCategory === "All" ? null : selectedCategory,
+      });
       setNews(response.news);
       setTotalPages(response.news.length > 10 ? 10 : response.news.length);
       setisLoading(false);
@@ -50,15 +57,35 @@ const MainPage = ({ className }: MainPageProps) => {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      console.log(response.categories);
+
+      setCategories(["All", ...response.categories]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    // fetchNews(currentPage);
+    fetchCategories();
   }, [currentPage]);
+
+  useEffect(() => {
+    fetchNews(currentPage);
+  }, [currentPage, selectedCategory]);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
   };
   return (
     <main className={`${s.mainPage} ${className ? className : ""}`}>
+      <Categories
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
       {news.length > 0 && !isLoading ? (
         <NewsBanner newsItem={news[0]} />
       ) : (
