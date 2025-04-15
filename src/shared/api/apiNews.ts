@@ -35,14 +35,15 @@ interface ParamsType {
 
 
 
-export const getNews = async ({ page_number = 1, page_size = 10, category }: ParamsType): Promise<NewsApiResponse> => {
+export const getNews = async ({ page_number = 1, page_size = 10, category, keywords }: ParamsType): Promise<NewsApiResponse> => {
   try {
     const res = await axios.get<NewsApiResponse>(`${BASE_URL}search`, {
       params: {
         apiKey: API_KEY,
         page_number,
         page_size,
-        category
+        category,
+        keywords
       }
     });
     return res.data;

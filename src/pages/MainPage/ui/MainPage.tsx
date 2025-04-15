@@ -6,6 +6,8 @@ import { NewsList } from "@/widgets/NewsList";
 import { Skeleton } from "@/shared/ui/Skeleton/Skeleton";
 import { Pagination } from "@/features/Pagination";
 import { Categories } from "@/features/Categories";
+import { Search } from "@/features/Search";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 interface MainPageProps {
   className?: string;
 }
@@ -38,9 +40,59 @@ const MainPage = ({ className }: MainPageProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(10);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([
+    "All",
+    "regional",
+    "technology",
+    "lifestyle",
+    "business",
+    "general",
+    "programming",
+    "science",
+    "entertainment",
+    "world",
+    "sports",
+    "finance",
+    "academia",
+    "politics",
+    "health",
+    "opinion",
+    "food",
+    "game",
+    "fashion",
+    "academic",
+    "crap",
+    "travel",
+    "culture",
+    "economy",
+    "environment",
+    "art",
+    "music",
+    "notsure",
+    "CS",
+    "education",
+    "redundant",
+    "television",
+    "commodity",
+    "movie",
+    "entrepreneur",
+    "review",
+    "auto",
+    "energy",
+    "celebrity",
+    "medical",
+    "gadgets",
+    "design",
+    "EE",
+    "security",
+    "mobile",
+    "estate",
+    "funny",
+  ]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [keywords, setKeywords] = useState<string>("");
 
+  const debounceKeywords = useDebounce(keywords, 1000);
   const fetchNews = async (currentPage: number) => {
     setisLoading(true);
     try {
@@ -48,9 +100,11 @@ const MainPage = ({ className }: MainPageProps) => {
         page_number: currentPage,
         page_size: pageSize,
         category: selectedCategory === "All" ? null : selectedCategory,
+        keywords: debounceKeywords,
       });
       setNews(response.news);
       setTotalPages(response.news.length > 10 ? 10 : response.news.length);
+      setPageSize(10);
       setisLoading(false);
     } catch (error) {
       console.log(error);
@@ -60,7 +114,6 @@ const MainPage = ({ className }: MainPageProps) => {
   const fetchCategories = async () => {
     try {
       const response = await getCategories();
-      console.log(response.categories);
 
       setCategories(["All", ...response.categories]);
     } catch (error) {
@@ -74,7 +127,9 @@ const MainPage = ({ className }: MainPageProps) => {
 
   useEffect(() => {
     fetchNews(currentPage);
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategory, debounceKeywords]);
+
+  console.log(debounceKeywords);
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
@@ -85,6 +140,10 @@ const MainPage = ({ className }: MainPageProps) => {
         categories={categories}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
+      />
+      <Search
+        keywords={keywords}
+        setKeywords={setKeywords}
       />
       {news.length > 0 && !isLoading ? (
         <NewsBanner newsItem={news[0]} />
